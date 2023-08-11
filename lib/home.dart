@@ -57,7 +57,6 @@ class _HomeState extends State<Home> {
         });
         print(element['label']);
       }
-
       modelRunning = false;
     }
   }
@@ -66,21 +65,14 @@ class _HomeState extends State<Home> {
     await Tflite.loadModel(
         model: "assets/model.tflite",
         labels: "assets/labels.txt",
-        numThreads: 1, // defaults to 1
-        isAsset: true, // defaults to true, set to false to load resources outside assets
-        useGpuDelegate: false
     );
-  }
-
-  doStuff() async{
-    await loadModel();
-    loadCamera();
   }
 
   @override
   void initState() {
-   doStuff();
-   super.initState();
+    loadModel();
+    loadCamera();
+    super.initState();
   }
 
   @override
