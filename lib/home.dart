@@ -17,7 +17,7 @@ class _HomeState extends State<Home> {
   bool modelRunning = false;
 
   loadCamera() {
-    cameraController = CameraController(cameras[1], ResolutionPreset.medium);
+    cameraController = CameraController(cameras[0], ResolutionPreset.low);
     cameraController!.initialize().then((value) {
       if (!mounted) {
         return;
