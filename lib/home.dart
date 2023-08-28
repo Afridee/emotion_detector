@@ -13,7 +13,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   CameraImage? cameraImage;
   CameraController? cameraController;
-  String output = '';
+  String output = 'Happy or Sad output';
   bool modelRunning = false;
 
   loadCamera() {
@@ -26,51 +26,17 @@ class _HomeState extends State<Home> {
           cameraImage = imageStream;
           setState(() {});
           if(!modelRunning){
-            runModel();
+            ///todo: this is where the model will run...
           }
         });
       }
     });
   }
 
-  runModel() async {
-    if (cameraImage != null) {
-      print('md ran');
-      modelRunning = true;
-      var predictions = await Tflite.runModelOnFrame(
-        bytesList: cameraImage!.planes.map((plane) {
-          return plane.bytes;
-        }).toList(),
-        imageHeight: cameraImage!.height,
-        imageWidth: cameraImage!.width,
-        imageMean: 127.5,
-        imageStd: 127.5,
-        rotation: 90,
-        numResults: 2,
-        threshold: 0.1,
-        asynch: true,
-      );
 
-      for (var element in predictions!) {
-        setState(() {
-          output = element['label'];
-        });
-        print(element['label']);
-      }
-      modelRunning = false;
-    }
-  }
-
-  loadModel() async {
-    await Tflite.loadModel(
-        model: "assets/model.tflite",
-        labels: "assets/labels.txt",
-    );
-  }
 
   @override
   void initState() {
-    loadModel();
     loadCamera();
     super.initState();
   }
@@ -79,7 +45,10 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Emotion detection App"),
+        centerTitle:true,
+        elevation: 0.4,
+        backgroundColor: Colors.white,
+        title: Text("Emosense", style: TextStyle(color: Colors.black)),
       ),
       body: Column(
         children: [
