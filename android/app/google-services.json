@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "453896366403",
+    "project_id": "emosense-96edc",
+    "storage_bucket": "emosense-96edc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:453896366403:android:9285ec66462eddb0d6a7f6",
+        "android_client_info": {
+          "package_name": "com.example.emotion_detector"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "453896366403-p3p1vl56a3odio5aju1r8qhlvk9dt82l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.emotion_detector",
+            "certificate_hash": "7df34231457db5125c3398e3b2ae2440ae1ba407"
+          }
+        },
+        {
+          "client_id": "453896366403-93oabqjfo82ulphi2maua3ujst5e1rfr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzhJoc6BVaMZfFWa4igVO6f3tBEUStx34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "453896366403-93oabqjfo82ulphi2maua3ujst5e1rfr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

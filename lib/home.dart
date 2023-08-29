@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'main.dart';
 import 'package:tflite_v2/tflite_v2.dart';
 
@@ -13,8 +14,41 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   CameraImage? cameraImage;
   CameraController? cameraController;
-  String output = 'Happy or Sad output';
+  String output = '';
   bool modelRunning = false;
+  bool isloading = false;
+  bool isSignedIn = false;
+
+  final GoogleSignIn googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'profile'
+    ],
+  );
+
+  signin() async {
+    isloading = true;
+    setState(() {});
+    await googleSignIn.signIn();
+    isloading = false;
+    setState(() {});
+  }
+
+  checkIfSignedIn() async{
+    isloading = true;
+    setState(() {});
+    isSignedIn = await googleSignIn.isSignedIn();
+    isloading = false;
+    setState(() {});
+  }
+
+  signOut() async{
+    isloading = true;
+    setState(() {});
+    await googleSignIn.signOut();
+    isloading = false;
+    setState(() {});
+  }
 
   loadCamera() {
     cameraController = CameraController(cameras[0], ResolutionPreset.low);
@@ -26,17 +60,52 @@ class _HomeState extends State<Home> {
           cameraImage = imageStream;
           setState(() {});
           if(!modelRunning){
-            ///todo: this is where the model will run...
+            runModel();
           }
         });
       }
     });
   }
 
+  runModel() async {
+    if (cameraImage != null) {
+      print('md ran');
+      modelRunning = true;
+      var predictions = await Tflite.runModelOnFrame(
+        bytesList: cameraImage!.planes.map((plane) {
+          return plane.bytes;
+        }).toList(),
+        imageHeight: cameraImage!.height,
+        imageWidth: cameraImage!.width,
+        imageMean: 127.5,
+        imageStd: 127.5,
+        rotation: 90,
+        numResults: 2,
+        threshold: 0.1,
+        asynch: true,
+      );
 
+      for (var element in predictions!) {
+        setState(() {
+          output = element['label'].toString().split(' ').last;
+        });
+        print(element['label']);
+      }
+      modelRunning = false;
+    }
+  }
+
+  loadModel() async {
+    await Tflite.loadModel(
+        model: "assets/model.tflite",
+        labels: "assets/labels.txt",
+    );
+  }
 
   @override
   void initState() {
+    checkIfSignedIn();
+    loadModel();
     loadCamera();
     super.initState();
   }
@@ -49,8 +118,14 @@ class _HomeState extends State<Home> {
         elevation: 0.4,
         backgroundColor: Colors.white,
         title: Text("Emosense", style: TextStyle(color: Colors.black)),
+        actions: [
+          IconButton(onPressed: () async{
+            await signOut();
+            checkIfSignedIn();
+          }, icon: Icon(Icons.logout, color: Colors.black,))
+        ],
       ),
-      body: Column(
+      body: isSignedIn  ? Column(
         children: [
           Padding(
             padding: EdgeInsets.all(20),
@@ -67,6 +142,19 @@ class _HomeState extends State<Home> {
           ),
           Text(output, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
         ],
+      ) : Container (
+        child:  Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("You are not signed in"),
+              ElevatedButton(onPressed: () async{
+                await signin();
+                checkIfSignedIn();
+              }, child: const Text("Sign in"))
+            ],
+          ),
+        ),
       ),
     );
   }
