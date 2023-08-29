@@ -119,13 +119,17 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.white,
         title: Text("Emosense", style: TextStyle(color: Colors.black)),
         actions: [
-          IconButton(onPressed: () async{
+          isSignedIn ? IconButton(onPressed: () async{
             await signOut();
             checkIfSignedIn();
-          }, icon: Icon(Icons.logout, color: Colors.black,))
+          }, icon: Icon(Icons.logout, color: Colors.black,)) : Container()
         ],
       ),
-      body: isSignedIn  ? Column(
+      body: isloading ? Center(
+        child: const CircularProgressIndicator(
+          color: Colors.black,
+        ),
+      ) : isSignedIn  ? Column(
         children: [
           Padding(
             padding: EdgeInsets.all(20),
