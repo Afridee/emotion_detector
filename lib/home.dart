@@ -116,13 +116,13 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         centerTitle:true,
         elevation: 0.4,
-        backgroundColor: Colors.white,
-        title: Text("Emosense", style: TextStyle(color: Colors.black)),
+        backgroundColor: Color(0xff3b3a94),
+        title: Text("Emosense", style: TextStyle(color: Colors.white)),
         actions: [
           isSignedIn ? IconButton(onPressed: () async{
             await signOut();
             checkIfSignedIn();
-          }, icon: Icon(Icons.logout, color: Colors.black,)) : Container()
+          }, icon: Icon(Icons.logout, color: Colors.white,)) : Container()
         ],
       ),
       body: isloading ? Center(
@@ -147,15 +147,38 @@ class _HomeState extends State<Home> {
           Text(output, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
         ],
       ) : Container (
+        color: Color(0xff3b3a94),
         child:  Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("You are not signed in"),
-              ElevatedButton(onPressed: () async{
+              Image.asset('assets/intro.jpeg'),
+              const Text("You are not signed in", style: TextStyle(fontSize: 25, color: Colors.white)),
+              SizedBox(height: 20),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blueAccent,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 50,
+                      vertical: 15,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  onPressed: () async{
                 await signin();
                 checkIfSignedIn();
-              }, child: const Text("Sign in"))
+              }, child: Container(
+                width: 80,
+                child: Row(
+                  children: [
+                    const Text("Sign in"),
+                    SizedBox(width: 8),
+                    Icon(Icons.login, color: Colors.white,)
+                  ],
+                ),
+              ))
             ],
           ),
         ),
